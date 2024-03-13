@@ -4,21 +4,22 @@ const passport = require("passport");
 require("dotenv").config();
 require('./auth/config')(passport);
 const connectDB = require("./db/connect");
-let cors = require("cors"); 
+let cors = require("cors");
+const { lockEndpoint } = require("./middleware/lock-endpoint")
 
 const app = express();
-const corsOptions ={
-    origin:'http://localhost:3000', 
-    credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200,
- }
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,            //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+}
 
 app.use(
   session({
     secret: "secret123",
     resave: false,
     saveUninitialized: false,
-   
+
   })
 );
 
@@ -61,7 +62,7 @@ app.get(
 
 // Protected route example (checks for authenticated user)
 app.get("/protected", (req, res) => {
-    console.log(req.isAuthenticated());
+  console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
     res.send("Welcome, authenticated user!");
   } else {
@@ -73,7 +74,7 @@ app.get("/protected", (req, res) => {
 app.get("/login-error", (req, res) => {
   res.send(
     "Login failed. Please use a work or school account associated with mitwpu.edu.in"
-      
+
   );
 });
 
@@ -83,17 +84,17 @@ app.get("/success", (req, res) => {
 });
 
 app.get('/user-info', (req, res) => {
-    console.log(req.isAuthenticated());
-    console.log(req.user);
-    if(req.user){
-        res.status(200).json({message:"user Login",user:req.user})
-    }else{
-        res.status(400).json({message:"Not Authorized"})
-    }
+  console.log(req.isAuthenticated());
+  console.log(req.user);
+  if (req.user) {
+    res.status(200).json({ message: "user Login", user: req.user })
+  } else {
+    res.status(400).json({ message: "Not Authorized" })
+  }
 })
 
 app.get("/logout", (req, res, next) => {
-    console.log("Logout");
+  console.log("Logout");
   req.logout(function (err) {
     if (err) {
       return next(err);
@@ -106,6 +107,10 @@ app.get("/logout", (req, res, next) => {
     });
   });
 });
+
+app.get("/start", lockEndpoint, (req, res) => {
+  res.send("Welcome, authenticated user!");
+})
 
 const start = async () => {
   try {
