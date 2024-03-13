@@ -5,7 +5,7 @@ require("dotenv").config();
 require('./auth/config')(passport);
 const connectDB = require("./db/connect");
 let cors = require("cors");
-const { lockEndpoint } = require("./middleware/lock-endpoint")
+const { lockEndpoint, unlockEndpoint } = require("./middleware/lock-endpoint")
 
 const app = express();
 const corsOptions = {
@@ -109,6 +109,10 @@ app.get("/logout", (req, res, next) => {
 
 app.get("/start", lockEndpoint, (req, res) => {
   res.send("Welcome, authenticated user!");
+})
+
+app.get("/quit", unlockEndpoint, (req, res) => {
+  res.send("Goodbye!");
 })
 
 const start = async () => {

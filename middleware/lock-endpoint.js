@@ -14,7 +14,7 @@ client.connect().then(() => console.log("Client Connected!"))
 // Middleware for locking endpoint
 const lockEndpoint = async (req, res, next) => {
 	const key = 'current-user';
-	const userid = req.headers.userid;
+	const userid = req.user.userid;
 
 	const reply = await client.get(key)
 
@@ -31,4 +31,18 @@ const lockEndpoint = async (req, res, next) => {
 	next();
 };
 
-module.exports = { lockEndpoint }
+const unlockEndpoint = async (req, res, next) => {
+	const key = 'current-user';
+	const userid = req.user.userid;
+
+	const reply = await client.get(key)
+
+	if (reply === userid) {
+		await client.del(key);
+	} else {
+		return res.status(429).send('Endpoint locked. Try again later.');
+	}
+	next();
+}
+
+module.exports = { lockEndpoint, unlockEndpoint }
