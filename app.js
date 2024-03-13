@@ -31,14 +31,13 @@ app.use(cors(corsOptions));
 
 // Passport session serialization/deserialization
 passport.serializeUser((user, done) => {
-  console.log(user.name);
-  done(null, user.name);
+  done(null, user);
 });
 
-passport.deserializeUser((name, done) => {
+passport.deserializeUser((user, done) => {
   // Implement logic to retrieve user data from database (replace with your actual logic)
-  console.log(name);
-  done(null, name);
+  console.log(user);
+  done(null, user);
 });
 
 // Authentication route (redirect to Google OAuth consent screen)
