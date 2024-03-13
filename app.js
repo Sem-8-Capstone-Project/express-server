@@ -108,6 +108,7 @@ app.get("/logout", (req, res, next) => {
 });
 
 app.get("/start", lockEndpoint, (req, res) => {
+  console.log("111 "+ req.user)
   res.send("Welcome, authenticated user!");
 })
 

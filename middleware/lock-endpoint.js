@@ -14,7 +14,7 @@ client.connect().then(() => console.log("Client Connected!"))
 // Middleware for locking endpoint
 const lockEndpoint = async (req, res, next) => {
 	const key = 'current-user';
-	const userid = req.headers.userid;
+	const userid = req.user.id;
 
 	const reply = await client.get(key)
 

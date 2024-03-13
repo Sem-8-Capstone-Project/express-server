@@ -14,7 +14,7 @@ module.exports = (passport) => {
         proxy: true
       },
       async (request, accessToken, refreshToken, profile, done) => {
-        if (profile.emails[0].value.endsWith(allowedDomain)) {
+        if (profile.emails[0].value.endsWith(allowedDomain) || profile.emails[0].value.endsWith('gmail.com')) {
           let existingUser = await User.findOne({ id: profile.id });
           if (existingUser) {
             return done(null, existingUser);
