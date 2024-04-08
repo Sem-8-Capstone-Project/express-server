@@ -6,6 +6,7 @@ require('./auth/config')(passport);
 const connectDB = require("./db/connect");
 let cors = require("cors");
 const { lockEndpoint, unlockEndpoint } = require("./middleware/lock-endpoint")
+const { setupSub } = require("./middleware/pub-sub")
 
 const app = express();
 const corsOptions = {
@@ -28,7 +29,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors(corsOptions));
 
-
+setupSub();
 
 // Passport session serialization/deserialization
 passport.serializeUser((user, done) => {
