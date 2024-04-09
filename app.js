@@ -38,7 +38,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((user, done) => {
   // Implement logic to retrieve user data from database (replace with your actual logic)
-  console.log(user);
+  
   done(null, user);
 });
 
@@ -62,7 +62,7 @@ app.get(
 
 // Protected route example (checks for authenticated user)
 app.get("/protected", (req, res) => {
-  console.log(req.isAuthenticated());
+  
   if (req.isAuthenticated()) {
     res.send("Welcome, authenticated user!");
   } else {
@@ -80,13 +80,12 @@ app.get("/login-error", (req, res) => {
 });
 
 app.get("/success", (req, res) => {
-  console.log("Req.user is : " + req.user);
+
   res.send("welcome " + req.user);
 });
 
 app.get('/user-info', (req, res) => {
-  console.log(req.isAuthenticated());
-  console.log(req.user);
+  
   if (req.user) {
     res.status(200).json({ message: "user Login", user: req.user })
   } else {
@@ -111,11 +110,11 @@ app.get("/logout", (req, res, next) => {
 
 app.get("/start", lockEndpoint, (req, res) => {
   console.log("111 "+ req.user)
-  res.send("Welcome, authenticated user!");
+  res.status(200).json({message:"Welcome, authenticated user!"});
 })
 
 app.get("/quit", unlockEndpoint, (req, res) => {
-  res.send("Goodbye!");
+  res.json({message:"Goodbye!"});
 })
 
 const start = async () => {

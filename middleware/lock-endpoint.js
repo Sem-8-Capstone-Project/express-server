@@ -28,12 +28,12 @@ const lockEndpoint = async (req, res, next) => {
 		} else if (await client.lPos(queueKey, userid) !== null) {
 			// Check if the user is already in the queue
 			const position = await client.lPos(queueKey, userid); // Get position in the queue
-			return res.status(429).send(`Endpoint locked. You are in position ${position + 1} in the queue.`);
+			return res.status(429).json({message:`Endpoint locked. You are in position ${position + 1} in the queue.`});
 		} else {
 			// Add user to the queue
 			await client.rPush(queueKey, userid);
 			const position = await client.lLen(queueKey); // Get position in the queue
-			return res.status(429).send(`Endpoint locked. You are in position ${position} in the queue.`);
+			return res.status(429).json({message:`Endpoint locked. You are in position ${position} in the queue.`});
 		}
 	}
 
@@ -56,7 +56,7 @@ const unlockEndpoint = async (req, res, next) => {
 		// Check user position in queue and remove them from the queue
 		await client.lRem(queueKey, 0, userid);
 	} else {
-		return res.status(429).send('Endpoint locked. Try again later.');
+		return res.status(429).json({message:'Endpoint locked. Try again later.'});
 	}
 	next();
 }
