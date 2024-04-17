@@ -7,6 +7,7 @@ const connectDB = require("./db/connect");
 let cors = require("cors");
 const { lockEndpoint, unlockEndpoint } = require("./middleware/lock-endpoint")
 const { setupSub } = require("./middleware/pub-sub")
+const WotInteraction = require("./middleware/wot-interaction")
 
 const app = express();
 const corsOptions = {
@@ -28,8 +29,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors(corsOptions));
+app.use(express.json());
 
 setupSub();
+const controller = new WotInteraction("http://localhost:8080/light");
+controller.connect().then(() => { console.log("Connected to WoT Thing") });
 
 // Passport session serialization/deserialization
 passport.serializeUser((user, done) => {
@@ -38,7 +42,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((user, done) => {
   // Implement logic to retrieve user data from database (replace with your actual logic)
-  
+
   done(null, user);
 });
 
@@ -62,7 +66,7 @@ app.get(
 
 // Protected route example (checks for authenticated user)
 app.get("/protected", (req, res) => {
-  
+
   if (req.isAuthenticated()) {
     res.send("Welcome, authenticated user!");
   } else {
@@ -85,7 +89,7 @@ app.get("/success", (req, res) => {
 });
 
 app.get('/user-info', (req, res) => {
-  
+
   if (req.user) {
     res.status(200).json({ message: "user Login", user: req.user })
   } else {
@@ -109,13 +113,36 @@ app.get("/logout", (req, res, next) => {
 });
 
 app.get("/start", lockEndpoint, (req, res) => {
-  console.log("111 "+ req.user)
-  res.status(200).json({message:"Welcome, authenticated user!"});
+  console.log("111 " + req.user)
+  res.status(200).json({ message: "Welcome, authenticated user!" });
 })
 
 app.get("/quit", unlockEndpoint, (req, res) => {
-  res.json({message:"Goodbye!"});
+  res.json({ message: "Goodbye!" });
 })
+
+app.post("/wot/led1-intensity", (req, res) => {
+  const intensity = req.body.intensity;
+  controller.setLedIntensity("led1", intensity);
+  res.json({ message: "Intensity set to " + intensity });
+})
+
+app.post("/wot/led2-intensity", (req, res) => {
+  const intensity = req.body.intensity;
+  controller.setLedIntensity("led2", intensity);
+  res.json({ message: "Intensity set to " + intensity });
+})
+
+app.post("/wot/set-username", (req, res) => {
+  const username = req.body.username;
+  controller.setUsername(username);
+  res.json({ message: "Username set to " + username });
+})
+
+app.post("/wot/oled-off", (req, res) => {
+  controller.oledOff();
+  res.json({ message: "OLED turned off" });
+});
 
 const start = async () => {
   try {
