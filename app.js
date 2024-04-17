@@ -32,7 +32,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 setupSub();
-const controller = new WotInteraction("http://localhost:8080/light");
+const controller = new WotInteraction("http://trout-sought-marlin.ngrok-free.app/light");
 controller.connect().then(() => { console.log("Connected to WoT Thing") });
 
 // Passport session serialization/deserialization
