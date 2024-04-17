@@ -8,6 +8,7 @@ let cors = require("cors");
 const { lockEndpoint, unlockEndpoint } = require("./middleware/lock-endpoint")
 const { setupSub } = require("./middleware/pub-sub")
 const WotInteraction = require("./middleware/wot-interaction")
+const bodyParser = require('body-parser');
 
 const app = express();
 const corsOptions = {
@@ -30,6 +31,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 setupSub();
 const controller = new WotInteraction("http://trout-sought-marlin.ngrok-free.app/light");
