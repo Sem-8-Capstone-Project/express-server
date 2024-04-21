@@ -6,6 +6,7 @@
   "dependencies": {
     "@node-wot/binding-http": "^0.8.13",
     "@node-wot/core": "^0.8.13",
+    "axios": "^1.6.8",
     "cookie-session": "^2.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

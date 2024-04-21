@@ -15,6 +15,8 @@ const corsOptions = {
   origin: 'http://localhost:3000',
   credentials: true,            //access-control-allow-credentials:true
   optionSuccessStatus: 200,
+  Headers: 'ngrok-skip-browser-warning'
+  
 }
 
 app.use(
@@ -92,7 +94,7 @@ app.get("/success", (req, res) => {
 });
 
 app.get('/user-info', (req, res) => {
-
+  console.log(req.user);
   if (req.user) {
     res.status(200).json({ message: "user Login", user: req.user })
   } else {
@@ -125,6 +127,7 @@ app.get("/quit", unlockEndpoint, (req, res) => {
 })
 
 app.post("/wot/led1-intensity", (req, res) => {
+  console.log(req.body);
   const intensity = req.body.intensity;
   controller.setLedIntensity("led1", intensity);
   res.json({ message: "Intensity set to " + intensity });
@@ -137,7 +140,7 @@ app.post("/wot/led2-intensity", (req, res) => {
 })
 
 app.post("/wot/set-username", (req, res) => {
-  const username = req.body.username;
+  const username = req.user.name;
   controller.setUsername(username);
   res.json({ message: "Username set to " + username });
 })
