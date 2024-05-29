@@ -1,7 +1,3 @@
-Here's a description for the GitHub repository of the Web API:
-
----
-
 # Web API for IoT Management System
 
 This repository contains the Web API component of our IoT management system, which is responsible for authentication, user queueing & management, routing, and interactions with both the database and the WoT (Web of Things) API. Additionally, this component facilitates communication with the front-end interface, providing a seamless experience for users to monitor and control IoT devices.
